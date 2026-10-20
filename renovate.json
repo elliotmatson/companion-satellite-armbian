@@ -27,17 +27,5 @@
       "automerge": true,
       "automergeType": "branch"
     }
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Versions annotated with a `# renovate:` comment in workflows, e.g. the pinned armbian/build release",
-      "managerFilePatterns": [
-        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-]+) depName=(?<depName>\\S+)\\s+[\\w-]+:\\s*[\"']?(?<currentValue>[^\\s\"']+)"
-      ]
-    }
   ]
 }

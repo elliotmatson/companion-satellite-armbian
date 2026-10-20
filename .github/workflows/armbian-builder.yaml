@@ -15,9 +15,9 @@ on:
         type: string
 
     outputs:
-      armbian-ref:
-        description: armbian/build tag the image was built from
-        value: ${{ jobs.build.outputs.armbian-ref }}
+      armbian-commit:
+        description: armbian/build commit the image was built from
+        value: ${{ jobs.build.outputs.armbian-commit }}
 
   workflow_dispatch:
     inputs:

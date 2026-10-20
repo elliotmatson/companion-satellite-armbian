@@ -17,7 +17,7 @@ This repo uses Github Actions to build Armbian, and then install Companion Satel
 After the workflow completes, navigate to the `Summary` tab of that execution, and your image will be attached as `armbian-<board>-companion-satellite-<version>.zip`, containing an `.img.xz`.
 
 ## How it works
-The build itself lives in [companion-armbian](https://github.com/elliotmatson/companion-armbian)'s shared `build-image.yaml` workflow: it builds a minimal Ubuntu Noble Armbian image for the chosen board from a pinned [armbian/build](https://github.com/armbian/build) release, then uses packer to run Companion Satellite's `pi-image/install.sh` inside it, using `companion-satellite.pkr.hcl` from this repo.
+The build itself lives in [companion-armbian](https://github.com/elliotmatson/companion-armbian)'s shared `build-image.yaml` workflow: it builds a minimal Ubuntu Noble Armbian image for the chosen board from the current [armbian/build](https://github.com/armbian/build) `main` (the exact commit is listed in each release), then uses packer to run Companion Satellite's `pi-image/install.sh` inside it, using `companion-satellite.pkr.hcl` from this repo.
 
 ## Automatic releases
 Renovate keeps the `companion-satellite` submodule pinned to the latest release tag. Whenever that pin changes on `main`, the `Build Select Boards on Companion Update via Renovate` workflow builds images for a few Orange Pi boards and publishes them as a GitHub release, with Companion Satellite's release notes.
