@@ -22,7 +22,7 @@ jobs:
       satellite_version: ${{ steps.get-version.outputs.satellite_version }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Get Satellite Version from .gitmodules, including leading 'v'
         id: get-version

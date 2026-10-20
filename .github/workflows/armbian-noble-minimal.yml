@@ -258,7 +258,7 @@ jobs:
     name: Build Armbian
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
       - name: Install qemu-user-static
