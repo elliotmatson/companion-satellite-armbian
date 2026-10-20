@@ -57,6 +57,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      SATELLITE_VERSION: ${{ needs.get-satellite-version.outputs.satellite_version }}
+      ARMBIAN_REF: ${{ needs.build-matrix.outputs.armbian-ref }}
     steps:
       - name: Download Built Artifacts
         uses: actions/download-artifact@v8
@@ -65,14 +68,33 @@ jobs:
           merge-multiple: true
           path: ./artifacts
 
+      - name: Write release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "Armbian (Ubuntu Noble, minimal) images with [Companion Satellite $SATELLITE_VERSION](https://github.com/bitfocus/companion-satellite/releases/tag/$SATELLITE_VERSION) preinstalled, built from [armbian/build $ARMBIAN_REF](https://github.com/armbian/build/releases/tag/$ARMBIAN_REF)."
+            echo
+            echo "Flash the \`.img.xz\` for your board with balenaEtcher or Raspberry Pi Imager. Satellite's web UI is on port 9999, and a subset of its settings can be edited in \`/boot/satellite-config\` on the device."
+            echo
+            echo "SSH is enabled. Log in as \`root\` with password \`1234\`; you'll be required to set a new password on first login."
+            echo
+            echo "## Companion Satellite $SATELLITE_VERSION release notes"
+            echo
+            gh release view "$SATELLITE_VERSION" --repo bitfocus/companion-satellite --json body --jq .body \
+              || echo "See https://github.com/bitfocus/companion-satellite/releases/tag/$SATELLITE_VERSION"
+          } > release-notes.md
+          cat release-notes.md
+
       - name: Create Release
         id: create-release
         uses: ncipollo/release-action@v1
         with:
-          tag: "companion-update-${{ needs.get-satellite-version.outputs.satellite_version }}"
+          tag: "companion-update-${{ env.SATELLITE_VERSION }}"
           commit: ${{ github.sha }}
-          name: "Companion Satellite Update ${{ needs.get-satellite-version.outputs.satellite_version }}"
+          name: "Companion Satellite Update ${{ env.SATELLITE_VERSION }}"
           artifacts: ./artifacts/*
-          generateReleaseNotes: true
+          bodyFile: release-notes.md
           allowUpdates: true
+          removeArtifacts: true
           replacesArtifacts: true

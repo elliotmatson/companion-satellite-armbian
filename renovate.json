@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
@@ -10,14 +12,32 @@
   },
   "packageRules": [
     {
-      "matchUpdateTypes": ["patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true,
       "automergeType": "branch"
     },
     {
-      "matchPackageNames": ["ghcr.io/bitfocus/companion**"],
+      "matchPackageNames": [
+        "ghcr.io/bitfocus/companion**"
+      ],
       "automerge": true,
       "automergeType": "branch"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Versions annotated with a `# renovate:` comment in workflows, e.g. the pinned armbian/build release",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+) depName=(?<depName>\\S+)\\s+[\\w-]+:\\s*[\"']?(?<currentValue>[^\\s\"']+)"
+      ]
     }
   ]
 }

@@ -12,6 +12,12 @@ variable "url" {
   default = ""
 }
 
+# Mount point for each partition in order (last is root); set by the build workflow
+variable "image_mounts" {
+  type    = list(string)
+  default = ["/"]
+}
+
 variable "branch" {
   type    = string
   default = "stable"
@@ -28,7 +34,7 @@ source "arm-image" "armbian" {
   target_image_size         = 5000000000
   output_filename           = "output-satellitepi/armbian-companion-satellite.img"
   qemu_binary               = "qemu-aarch64-static"
-  image_mounts              = ["/"]
+  image_mounts              = var.image_mounts
   # needed on newer Armbian images for DNS to work for some reason, no resolv-conf option seems to work
   additional_chroot_mounts  = [["bind", "/run/systemd", "/run/systemd"]]
 }
@@ -44,12 +50,11 @@ build {
   provisioner "shell" {
     #system setup
     inline = [
-      # disable ssh
-      # TODO: This doesn't work for some reason
-      "sudo systemctl disable ssh",
-
-      # Disable first-login script
+      # Skip Armbian's interactive first-login wizard, but still force the default
+      # root password (1234) to be changed on first login, including over SSH
       "rm /root/.not_logged_in_yet",
+      "chage -d 0 root",
+      "chage -l root | head -n1",
 
       # change the hostname
       "CURRENT_HOSTNAME=`cat /etc/hostname | tr -d \" \t\n\r\"`",
