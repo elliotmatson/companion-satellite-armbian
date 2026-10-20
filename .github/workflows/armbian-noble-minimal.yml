@@ -262,16 +262,16 @@ jobs:
         with:
           submodules: 'true'
       - name: Install qemu-user-static
-        run: sudo apt install -y qemu-user-static
+        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
       - name: Build Armbian
         run: |
           git clone --depth=1 --branch=main https://github.com/armbian/build 
           ./build/compile.sh build \
-          BOARD=${{ github.event.inputs.armbian-board }} \
+          BOARD=${{ inputs.armbian-board }} \
           BRANCH=current \
           RELEASE=noble \
           BUILD_MINIMAL=yes \
-          KERNEL_CONFIGURE=no\
+          KERNEL_CONFIGURE=no
 
       - name: Upload Armbian image
         uses: actions/upload-artifact@v6
