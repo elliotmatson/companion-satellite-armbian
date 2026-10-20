@@ -39,8 +39,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # arm64 boards only: packer's arm-image builder and the Satellite installer don't support 32-bit (armhf)
         armbian-board:
-          - orangepizero
           - orangepizero2
           - orangepizero2w
           - orangepizero3
