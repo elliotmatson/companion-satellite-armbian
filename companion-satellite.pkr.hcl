@@ -50,11 +50,9 @@ build {
   provisioner "shell" {
     #system setup
     inline = [
-      # Skip Armbian's interactive first-login wizard, but still force the default
-      # root password (1234) to be changed on first login, including over SSH
+      # Skip Armbian's interactive first-login wizard (the default root password
+      # still has to be changed on first login, see the last provisioner)
       "rm /root/.not_logged_in_yet",
-      "chage -d 0 root",
-      "chage -l root | head -n1",
 
       # change the hostname
       "CURRENT_HOSTNAME=`cat /etc/hostname | tr -d \" \t\n\r\"`",
@@ -75,6 +73,16 @@ build {
       "echo $SATELLITE_BUILD",
       "chmod +x /tmp/install.sh",
       "/tmp/install.sh"
+    ]
+  }
+
+  provisioner "shell" {
+    # Last, because the install step above runs through `su root`, which refuses an
+    # expired password: force the default root password (1234) to be changed on
+    # first login, including over SSH
+    inline = [
+      "chage -d 0 root",
+      "chage -l root | head -n1",
     ]
   }
 
