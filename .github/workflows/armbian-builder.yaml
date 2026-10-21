@@ -344,7 +344,7 @@ on:
 jobs:
   # The build itself is shared with companion-armbian
   build:
-    uses: elliotmatson/companion-armbian/.github/workflows/build-image.yaml@claude/bold-hopper-3ltrrs
+    uses: elliotmatson/companion-armbian/.github/workflows/build-image.yaml@main
     secrets: inherit
     with:
       armbian-board: ${{ inputs.armbian-board }}
