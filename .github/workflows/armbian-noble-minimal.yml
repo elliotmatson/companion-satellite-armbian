@@ -265,7 +265,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y qemu-user-static
       - name: Build Armbian
         run: |
-          git clone --depth=1 --branch=main https://github.com/armbian/build 
+          git clone --depth=1 --branch=main https://github.com/armbian/build
           ./build/compile.sh build \
           BOARD=${{ inputs.armbian-board }} \
           BRANCH=current \
