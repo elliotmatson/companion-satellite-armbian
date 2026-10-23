@@ -33,7 +33,8 @@ source "arm-image" "armbian" {
   iso_url                   = var.url
   target_image_size         = 5000000000
   output_filename           = "output-satellitepi/armbian-companion-satellite.img"
-  qemu_binary               = "qemu-aarch64-static"
+  # arm64, so packer runs it natively on arm64 runners and through qemu-aarch64-static elsewhere
+  image_arch                = "arm64"
   image_mounts              = var.image_mounts
   # needed on newer Armbian images for DNS to work for some reason, no resolv-conf option seems to work
   additional_chroot_mounts  = [["bind", "/run/systemd", "/run/systemd"]]

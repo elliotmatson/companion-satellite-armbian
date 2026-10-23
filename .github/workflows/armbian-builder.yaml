@@ -20,6 +20,11 @@ on:
         type: number
         default: 0
 
+      runner:
+        required: false
+        type: string
+        default: "ubuntu-24.04-arm"
+
     outputs:
       armbian-commit:
         description: armbian/build commit the image was built from
@@ -32,6 +37,14 @@ on:
         description: Companion Satellite Version (e.g. v2.6.0, or "stable" for the latest)
         default: "stable"
         required: true
+
+      runner:
+        type: choice
+        description: "Runner (x86 emulates the image setup through qemu, much slower)"
+        default: "ubuntu-24.04-arm"
+        options:
+          - ubuntu-24.04-arm
+          - ubuntu-24.04
 
       armbian-board:
         type: choice
@@ -355,6 +368,7 @@ jobs:
     with:
       armbian-board: ${{ inputs.armbian-board }}
       retention-days: ${{ inputs.retention-days || 0 }}
+      runner: ${{ inputs.runner || 'ubuntu-24.04-arm' }}
       packer-template: companion-satellite.pkr.hcl
       packer-image: output-satellitepi/armbian-companion-satellite.img
       # install.sh only resolves build=stable to the latest release when branch is not also "stable"

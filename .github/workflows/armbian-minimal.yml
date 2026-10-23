@@ -1,4 +1,4 @@
-name: Builds vanilla armbian image, for debugging
+name: Builds vanilla armbian image (Ubuntu 26.04), for debugging
 
 permissions:
   contents: read
@@ -254,22 +254,25 @@ on:
 
 jobs:
   build-armbian:
-    runs-on: ubuntu-latest
+    # Same runner as the shared builder (companion-armbian build-image.yaml)
+    runs-on: ubuntu-24.04-arm
     name: Build Armbian
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
         with:
           submodules: 'true'
-      - name: Install qemu-user-static
-        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+      - name: Install qemu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
       - name: Build Armbian
         run: |
           git clone --depth=1 --branch=main https://github.com/armbian/build
           ./build/compile.sh build \
           BOARD=${{ inputs.armbian-board }} \
           BRANCH=current \
-          RELEASE=noble \
+          RELEASE=resolute \
           BUILD_MINIMAL=yes \
           KERNEL_CONFIGURE=no
 
