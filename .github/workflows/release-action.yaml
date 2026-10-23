@@ -73,7 +73,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           {
-            echo "Armbian (Ubuntu Noble, minimal) images with [Companion Satellite $SATELLITE_VERSION](https://github.com/bitfocus/companion-satellite/releases/tag/$SATELLITE_VERSION) preinstalled, built from armbian/build [${ARMBIAN_COMMIT::7}](https://github.com/armbian/build/commit/$ARMBIAN_COMMIT)."
+            echo "Armbian (Ubuntu 26.04 "Resolute", minimal) images with [Companion Satellite $SATELLITE_VERSION](https://github.com/bitfocus/companion-satellite/releases/tag/$SATELLITE_VERSION) preinstalled, built from armbian/build [${ARMBIAN_COMMIT::7}](https://github.com/armbian/build/commit/$ARMBIAN_COMMIT)."
             echo
             echo "Flash the \`.img.xz\` for your board with balenaEtcher or Raspberry Pi Imager. Satellite's web UI is on port 9999, and a subset of its settings can be edited in \`/boot/satellite-config\` on the device."
             echo
