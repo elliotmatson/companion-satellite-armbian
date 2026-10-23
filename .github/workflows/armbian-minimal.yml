@@ -254,9 +254,8 @@ on:
 
 jobs:
   build-armbian:
-    # Same runner as the shared builder (companion-armbian build-image.yaml): Ubuntu 26.04
-    # runners have no static qemu. The image itself is Ubuntu 26.04 (RELEASE=resolute).
-    runs-on: ubuntu-24.04
+    # Same runner as the shared builder (companion-armbian build-image.yaml)
+    runs-on: ubuntu-24.04-arm
     name: Build Armbian
     steps:
       - name: Checkout Repository
