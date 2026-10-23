@@ -254,31 +254,19 @@ on:
 
 jobs:
   build-armbian:
-    runs-on: ubuntu-latest
+    # Same runner as the shared builder (companion-armbian build-image.yaml): Ubuntu 26.04
+    # runners have no static qemu. The image itself is Ubuntu 26.04 (RELEASE=resolute).
+    runs-on: ubuntu-24.04
     name: Build Armbian
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
         with:
           submodules: 'true'
-      # Ubuntu 26.04 dropped the qemu-user-static package: qemu-user is statically linked
-      # and qemu-user-binfmt registers it. packer's arm-image source still looks for
-      # qemu-aarch64-static and copies it into the image, so it must be a static binary.
       - name: Install qemu
         run: |
           sudo apt-get update
-          if apt-cache show qemu-user-static 2>/dev/null | grep -q '^Filename:'; then
-            sudo apt-get install -y qemu-user-static
-          else
-            sudo apt-get install -y qemu-user-binfmt
-          fi
-          qemu="$(command -v qemu-aarch64-static || command -v qemu-aarch64)"
-          if ! file -L "$qemu" | grep -q 'statically linked'; then
-            echo "::error::$qemu is not statically linked, packer can't use it inside the image"
-            exit 1
-          fi
-          [ "$(basename "$qemu")" = qemu-aarch64-static ] || sudo ln -sf "$qemu" /usr/local/bin/qemu-aarch64-static
-          qemu-aarch64-static --version | head -n1
+          sudo apt-get install -y qemu-user-static
       - name: Build Armbian
         run: |
           git clone --depth=1 --branch=main https://github.com/armbian/build
