@@ -1,0 +1,39 @@
+name: Test build
+
+# Builds one board for every branch Renovate pushes. Renovate only automerges an update
+# (and so triggers a release) once this check passes; if it fails, Renovate opens a PR instead.
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - "renovate/**"
+  workflow_dispatch:
+
+concurrency:
+  group: test-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  get-satellite-version:
+    runs-on: ubuntu-latest
+    outputs:
+      satellite_version: ${{ steps.get-version.outputs.satellite_version }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Get Satellite Version from .gitmodules
+        id: get-version
+        run: echo "satellite_version=$(git config -f .gitmodules submodule.companion-satellite.branch)" >> $GITHUB_OUTPUT
+
+  build:
+    needs: get-satellite-version
+    uses: ./.github/workflows/armbian-builder.yaml
+    secrets: inherit
+    with:
+      armbian-board: orangepizero3
+      satellite-build: ${{ needs.get-satellite-version.outputs.satellite_version }}
+      retention-days: 1

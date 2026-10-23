@@ -14,6 +14,12 @@ on:
         required: true
         type: string
 
+      retention-days:
+        description: Days to keep the image artifact (0 = repository default)
+        required: false
+        type: number
+        default: 0
+
     outputs:
       armbian-commit:
         description: armbian/build commit the image was built from
@@ -348,6 +354,7 @@ jobs:
     secrets: inherit
     with:
       armbian-board: ${{ inputs.armbian-board }}
+      retention-days: ${{ inputs.retention-days || 0 }}
       packer-template: companion-satellite.pkr.hcl
       packer-image: output-satellitepi/armbian-companion-satellite.img
       # install.sh only resolves build=stable to the latest release when branch is not also "stable"
